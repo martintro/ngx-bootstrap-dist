@@ -5880,6 +5880,9 @@ class BsDatepickerAbstractComponent {
     set isDisabled(value) {
         this._effects.setDisabled(value);
     }
+    set dateCustomClasses(value) {
+        this._effects.setDateCustomClasses(value);
+    }
     setViewMode(event) { }
     navigateTo(event) { }
     dayHoverHandler(event) { }
@@ -5893,6 +5896,8 @@ class BsDatepickerAbstractComponent {
     }
 }
 
+class BsDatepickerDateCustomClasses {
+}
 /**
  * For date range picker there are `BsDaterangepickerConfig` which inherits all properties,
  * except `displayMonths`, for range picker it default to `2`
@@ -5999,6 +6004,12 @@ class BsDatepickerActions {
             payload: value
         };
     }
+    setDateCustomClasses(value) {
+        return {
+            type: BsDatepickerActions.SET_DATE_CUSTOM_CLASSES,
+            payload: value
+        };
+    }
     setLocale(locale) {
         return {
             type: BsDatepickerActions.SET_LOCALE,
@@ -6018,6 +6029,7 @@ BsDatepickerActions.CHANGE_VIEWMODE = '[datepicker] switch view mode';
 BsDatepickerActions.SET_MIN_DATE = '[datepicker] set min date';
 BsDatepickerActions.SET_MAX_DATE = '[datepicker] set max date';
 BsDatepickerActions.SET_IS_DISABLED = '[datepicker] set is disabled';
+BsDatepickerActions.SET_DATE_CUSTOM_CLASSES = '[datepicker] set date custom classes';
 BsDatepickerActions.SET_LOCALE = '[datepicker] set datepicker locale';
 BsDatepickerActions.SELECT_RANGE = '[daterangepicker] select dates range';
 BsDatepickerActions.decorators = [
@@ -6081,6 +6093,10 @@ class BsDatepickerEffects {
     }
     setDisabled(value) {
         this._store.dispatch(this._actions.isDisabled(value));
+        return this;
+    }
+    setDateCustomClasses(value) {
+        this._store.dispatch(this._actions.setDateCustomClasses(value));
         return this;
     }
     /* Set rendering options */
@@ -6195,6 +6211,11 @@ class BsDatepickerEffects {
             .select(state => state.hoveredDate)
             .filter(hoveredDate => !!hoveredDate)
             .subscribe(hoveredDate => this._store.dispatch(this._actions.flag())));
+        // date custom classes
+        this._subs.push(this._store
+            .select(state => state.dateCustomClasses)
+            .filter(dateCustomClasses => !!dateCustomClasses)
+            .subscribe(dateCustomClasses => this._store.dispatch(this._actions.flag())));
         // on locale change
         this._subs.push(this._localeService.localeChange
             .subscribe(locale => this._store.dispatch(this._actions.setLocale(locale))));
@@ -6383,6 +6404,11 @@ function flagDaysCalendar(formattedMonth, options) {
             const isDisabled = options.isDisabled ||
                 isBefore(day.date, options.minDate, 'day') ||
                 isAfter(day.date, options.maxDate, 'day');
+            const customClasses = options.dateCustomClasses && options.dateCustomClasses
+                .map(dcc => isSameDay(day.date, dcc.date) ? dcc.classes : [])
+                .reduce((previousValue, currentValue) => previousValue.concat(currentValue), [])
+                .join(' ')
+                || "";
             // decide update or not
             const newDay = Object.assign({}, day, {
                 isOtherMonth,
@@ -6391,15 +6417,17 @@ function flagDaysCalendar(formattedMonth, options) {
                 isSelectionStart,
                 isSelectionEnd,
                 isInRange,
-                isDisabled
+                isDisabled,
+                customClasses
             });
             if (day.isOtherMonth !== newDay.isOtherMonth ||
                 day.isHovered !== newDay.isHovered ||
                 day.isSelected !== newDay.isSelected ||
                 day.isSelectionStart !== newDay.isSelectionStart ||
                 day.isSelectionEnd !== newDay.isSelectionEnd ||
+                day.isInRange !== newDay.isInRange ||
                 day.isDisabled !== newDay.isDisabled ||
-                day.isInRange !== newDay.isInRange) {
+                day.customClasses !== newDay.customClasses) {
                 week.days[dayIndex] = newDay;
             }
         });
@@ -6631,6 +6659,11 @@ function bsDatepickerReducer(state = initialDatepickerState, action) {
                 isDisabled: action.payload
             });
         }
+        case BsDatepickerActions.SET_DATE_CUSTOM_CLASSES: {
+            return Object.assign({}, state, {
+                dateCustomClasses: action.payload
+            });
+        }
         default:
             return state;
     }
@@ -6710,6 +6743,7 @@ function flagReducer(state, action) {
             selectedDate: state.selectedDate,
             selectedRange: state.selectedRange,
             displayMonths: state.displayMonths,
+            dateCustomClasses: state.dateCustomClasses,
             monthIndex
         }));
         return Object.assign({}, state, { flaggedMonths });
@@ -6917,6 +6951,9 @@ class BsDatepickerDirective {
         if (changes.isDisabled) {
             this._datepickerRef.instance.isDisabled = this.isDisabled;
         }
+        if (changes.dateCustomClasses) {
+            this._datepickerRef.instance.dateCustomClasses = this.dateCustomClasses;
+        }
     }
     /**
      * Opens an element’s datepicker. This is considered a “manual” triggering of
@@ -6973,7 +7010,8 @@ class BsDatepickerDirective {
             value: this._bsValue,
             isDisabled: this.isDisabled,
             minDate: this.minDate || this.bsConfig && this.bsConfig.minDate,
-            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate
+            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate,
+            dateCustomClasses: this.dateCustomClasses || this.bsConfig && this.bsConfig.dateCustomClasses
         });
     }
     ngOnDestroy() {
@@ -7007,6 +7045,7 @@ BsDatepickerDirective.propDecorators = {
     'isDisabled': [{ type: Input },],
     'minDate': [{ type: Input },],
     'maxDate': [{ type: Input },],
+    'dateCustomClasses': [{ type: Input },],
     'bsValueChange': [{ type: Output },],
 };
 
@@ -7298,6 +7337,9 @@ class BsDaterangepickerDirective {
         if (changes.isDisabled) {
             this._datepickerRef.instance.isDisabled = this.isDisabled;
         }
+        if (changes.dateCustomClasses) {
+            this._datepickerRef.instance.dateCustomClasses = this.dateCustomClasses;
+        }
     }
     /**
      * Opens an element’s datepicker. This is considered a “manual” triggering of
@@ -7334,7 +7376,8 @@ class BsDaterangepickerDirective {
             value: this._bsValue,
             isDisabled: this.isDisabled,
             minDate: this.minDate || this.bsConfig && this.bsConfig.minDate,
-            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate
+            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate,
+            dateCustomClasses: this.dateCustomClasses || this.bsConfig && this.bsConfig.dateCustomClasses
         });
     }
     /**
@@ -7390,6 +7433,7 @@ BsDaterangepickerDirective.propDecorators = {
     'isDisabled': [{ type: Input },],
     'minDate': [{ type: Input },],
     'maxDate': [{ type: Input },],
+    'dateCustomClasses': [{ type: Input },],
     'bsValueChange': [{ type: Output },],
 };
 
@@ -7612,6 +7656,9 @@ class BsDatepickerInlineDirective {
         if (changes.isDisabled) {
             this._datepickerRef.instance.isDisabled = this.isDisabled;
         }
+        if (changes.dateCustomClasses) {
+            this._datepickerRef.instance.dateCustomClasses = this.dateCustomClasses;
+        }
     }
     /**
      * Set config for datepicker
@@ -7621,7 +7668,8 @@ class BsDatepickerInlineDirective {
             value: this._bsValue,
             isDisabled: this.isDisabled,
             minDate: this.minDate || this.bsConfig && this.bsConfig.minDate,
-            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate
+            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate,
+            dateCustomClasses: this.dateCustomClasses || this.bsConfig && this.bsConfig.dateCustomClasses
         });
     }
     ngOnDestroy() {
@@ -7648,6 +7696,7 @@ BsDatepickerInlineDirective.propDecorators = {
     'isDisabled': [{ type: Input },],
     'minDate': [{ type: Input },],
     'maxDate': [{ type: Input },],
+    'dateCustomClasses': [{ type: Input },],
     'bsValueChange': [{ type: Output },],
 };
 
@@ -7719,6 +7768,7 @@ BsDatepickerDayDecoratorComponent.decorators = [
                 selector: '[bsDatepickerDayDecorator]',
                 changeDetection: ChangeDetectionStrategy.OnPush,
                 host: {
+                    '[class]': 'day.customClasses',
                     '[class.disabled]': 'day.isDisabled',
                     '[class.is-highlighted]': 'day.isHovered',
                     '[class.is-other-month]': 'day.isOtherMonth',
@@ -15528,5 +15578,5 @@ const thLocale = {
     }
 };
 
-export { listLocales, setTheme, AccordionComponent, AccordionConfig, AccordionModule, AccordionPanelComponent, AlertComponent, AlertConfig, AlertModule, ButtonCheckboxDirective, ButtonRadioDirective, ButtonsModule, CarouselComponent, CarouselConfig, CarouselModule, SlideComponent, CollapseDirective, CollapseModule, DateFormatter, DatePickerComponent, DatepickerConfig, DatepickerModule, DayPickerComponent, MonthPickerComponent, YearPickerComponent, BsDatepickerModule, BsDatepickerConfig, BsDaterangepickerConfig, BsDatepickerInlineConfig, BsLocaleService, BsDaterangepickerDirective, BsDatepickerDirective, ModalDirective, ModalOptions, ModalBackdropOptions, ModalBackdropComponent, ModalModule, BsModalRef, BsModalService, BsDropdownModule, BsDropdownConfig, BsDropdownState, BsDropdownContainerComponent, BsDropdownDirective, BsDropdownMenuDirective, BsDropdownToggleDirective, PagerComponent, PaginationComponent, PaginationConfig, PaginationModule, BarComponent, ProgressbarComponent, ProgressbarConfig, ProgressbarModule, RatingComponent, RatingModule, DraggableItemService, SortableComponent, SortableModule, NgTranscludeDirective, TabDirective, TabHeadingDirective, TabsetComponent, TabsetConfig, TabsModule, TimepickerComponent, TimepickerConfig, TimepickerModule, TooltipConfig, TooltipContainerComponent, TooltipDirective, TooltipModule, TypeaheadOptions, TypeaheadContainerComponent, TypeaheadDirective, TypeaheadMatch, TypeaheadModule, PopoverConfig, PopoverContainerComponent, PopoverDirective, PopoverModule, OnChange, LinkedList, isBs3, Trigger, Utils, ComponentLoader, ComponentLoaderFactory, ContentRef, Positioning, PositioningService, positionElements, defineLocale, getSetGlobalLocale, arLocale, csLocale, daLocale, deLocale, enGbLocale, esLocale, esDoLocale, esUsLocale, frLocale, hiLocale, huLocale, idLocale, itLocale, jaLocale, koLocale, nlLocale, nlBeLocale, plLocale, ptBrLocale, svLocale, ruLocale, zhCnLocale, trLocale, heLocale, thLocale };
+export { listLocales, setTheme, AccordionComponent, AccordionConfig, AccordionModule, AccordionPanelComponent, AlertComponent, AlertConfig, AlertModule, ButtonCheckboxDirective, ButtonRadioDirective, ButtonsModule, CarouselComponent, CarouselConfig, CarouselModule, SlideComponent, CollapseDirective, CollapseModule, DateFormatter, DatePickerComponent, DatepickerConfig, DatepickerModule, DayPickerComponent, MonthPickerComponent, YearPickerComponent, BsDatepickerModule, BsDatepickerDateCustomClasses, BsDatepickerConfig, BsDaterangepickerConfig, BsDatepickerInlineConfig, BsLocaleService, BsDaterangepickerDirective, BsDatepickerDirective, ModalDirective, ModalOptions, ModalBackdropOptions, ModalBackdropComponent, ModalModule, BsModalRef, BsModalService, BsDropdownModule, BsDropdownConfig, BsDropdownState, BsDropdownContainerComponent, BsDropdownDirective, BsDropdownMenuDirective, BsDropdownToggleDirective, PagerComponent, PaginationComponent, PaginationConfig, PaginationModule, BarComponent, ProgressbarComponent, ProgressbarConfig, ProgressbarModule, RatingComponent, RatingModule, DraggableItemService, SortableComponent, SortableModule, NgTranscludeDirective, TabDirective, TabHeadingDirective, TabsetComponent, TabsetConfig, TabsModule, TimepickerComponent, TimepickerConfig, TimepickerModule, TooltipConfig, TooltipContainerComponent, TooltipDirective, TooltipModule, TypeaheadOptions, TypeaheadContainerComponent, TypeaheadDirective, TypeaheadMatch, TypeaheadModule, PopoverConfig, PopoverContainerComponent, PopoverDirective, PopoverModule, OnChange, LinkedList, isBs3, Trigger, Utils, ComponentLoader, ComponentLoaderFactory, ContentRef, Positioning, PositioningService, positionElements, defineLocale, getSetGlobalLocale, arLocale, csLocale, daLocale, deLocale, enGbLocale, esLocale, esDoLocale, esUsLocale, frLocale, hiLocale, huLocale, idLocale, itLocale, jaLocale, koLocale, nlLocale, nlBeLocale, plLocale, ptBrLocale, svLocale, ruLocale, zhCnLocale, trLocale, heLocale, thLocale };
 //# sourceMappingURL=ngx-bootstrap.es2015.js.map

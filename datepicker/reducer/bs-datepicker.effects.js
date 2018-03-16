@@ -33,6 +33,10 @@ var BsDatepickerEffects = (function () {
         this._store.dispatch(this._actions.isDisabled(value));
         return this;
     };
+    BsDatepickerEffects.prototype.setDateCustomClasses = function (value) {
+        this._store.dispatch(this._actions.setDateCustomClasses(value));
+        return this;
+    };
     /* Set rendering options */
     BsDatepickerEffects.prototype.setOptions = function (_config) {
         var _options = Object.assign({ locale: this._localeService.currentLocale }, _config);
@@ -147,6 +151,11 @@ var BsDatepickerEffects = (function () {
             .select(function (state) { return state.hoveredDate; })
             .filter(function (hoveredDate) { return !!hoveredDate; })
             .subscribe(function (hoveredDate) { return _this._store.dispatch(_this._actions.flag()); }));
+        // date custom classes
+        this._subs.push(this._store
+            .select(function (state) { return state.dateCustomClasses; })
+            .filter(function (dateCustomClasses) { return !!dateCustomClasses; })
+            .subscribe(function (dateCustomClasses) { return _this._store.dispatch(_this._actions.flag()); }));
         // on locale change
         this._subs.push(this._localeService.localeChange
             .subscribe(function (locale) { return _this._store.dispatch(_this._actions.setLocale(locale)); }));

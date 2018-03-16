@@ -904,6 +904,7 @@ function setTime(date, value) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return BsDatepickerDateCustomClasses; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BsDatepickerConfig; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__angular_core__);
@@ -913,6 +914,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+var BsDatepickerDateCustomClasses = (function () {
+    function BsDatepickerDateCustomClasses() {
+    }
+    return BsDatepickerDateCustomClasses;
+}());
 
 /**
  * For date range picker there are `BsDaterangepickerConfig` which inherits all properties,
@@ -1583,6 +1590,12 @@ var BsDatepickerActions = (function () {
             payload: value
         };
     };
+    BsDatepickerActions.prototype.setDateCustomClasses = function (value) {
+        return {
+            type: BsDatepickerActions_1.SET_DATE_CUSTOM_CLASSES,
+            payload: value
+        };
+    };
     BsDatepickerActions.prototype.setLocale = function (locale) {
         return {
             type: BsDatepickerActions_1.SET_LOCALE,
@@ -1601,6 +1614,7 @@ var BsDatepickerActions = (function () {
     BsDatepickerActions.SET_MIN_DATE = '[datepicker] set min date';
     BsDatepickerActions.SET_MAX_DATE = '[datepicker] set max date';
     BsDatepickerActions.SET_IS_DISABLED = '[datepicker] set is disabled';
+    BsDatepickerActions.SET_DATE_CUSTOM_CLASSES = '[datepicker] set date custom classes';
     BsDatepickerActions.SET_LOCALE = '[datepicker] set datepicker locale';
     BsDatepickerActions.SELECT_RANGE = '[daterangepicker] select dates range';
     BsDatepickerActions = BsDatepickerActions_1 = __decorate([
@@ -3012,6 +3026,10 @@ var BsDatepickerEffects = (function () {
         this._store.dispatch(this._actions.isDisabled(value));
         return this;
     };
+    BsDatepickerEffects.prototype.setDateCustomClasses = function (value) {
+        this._store.dispatch(this._actions.setDateCustomClasses(value));
+        return this;
+    };
     /* Set rendering options */
     BsDatepickerEffects.prototype.setOptions = function (_config) {
         var _options = Object.assign({ locale: this._localeService.currentLocale }, _config);
@@ -3126,6 +3144,11 @@ var BsDatepickerEffects = (function () {
             .select(function (state) { return state.hoveredDate; })
             .filter(function (hoveredDate) { return !!hoveredDate; })
             .subscribe(function (hoveredDate) { return _this._store.dispatch(_this._actions.flag()); }));
+        // date custom classes
+        this._subs.push(this._store
+            .select(function (state) { return state.dateCustomClasses; })
+            .filter(function (dateCustomClasses) { return !!dateCustomClasses; })
+            .subscribe(function (dateCustomClasses) { return _this._store.dispatch(_this._actions.flag()); }));
         // on locale change
         this._subs.push(this._localeService.localeChange
             .subscribe(function (locale) { return _this._store.dispatch(_this._actions.setLocale(locale)); }));
@@ -4931,6 +4954,9 @@ var BsDatepickerDirective = (function () {
         if (changes.isDisabled) {
             this._datepickerRef.instance.isDisabled = this.isDisabled;
         }
+        if (changes.dateCustomClasses) {
+            this._datepickerRef.instance.dateCustomClasses = this.dateCustomClasses;
+        }
     };
     /**
      * Opens an element’s datepicker. This is considered a “manual” triggering of
@@ -4989,7 +5015,8 @@ var BsDatepickerDirective = (function () {
             value: this._bsValue,
             isDisabled: this.isDisabled,
             minDate: this.minDate || this.bsConfig && this.bsConfig.minDate,
-            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate
+            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate,
+            dateCustomClasses: this.dateCustomClasses || this.bsConfig && this.bsConfig.dateCustomClasses
         });
     };
     BsDatepickerDirective.prototype.ngOnDestroy = function () {
@@ -5045,6 +5072,10 @@ var BsDatepickerDirective = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
         __metadata("design:type", Object)
     ], BsDatepickerDirective.prototype, "maxDate", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+        __metadata("design:type", Array)
+    ], BsDatepickerDirective.prototype, "dateCustomClasses", void 0);
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Output"])(),
         __metadata("design:type", typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"]) === "function" && _c || Object)
@@ -5304,6 +5335,9 @@ var BsDaterangepickerDirective = (function () {
         if (changes.isDisabled) {
             this._datepickerRef.instance.isDisabled = this.isDisabled;
         }
+        if (changes.dateCustomClasses) {
+            this._datepickerRef.instance.dateCustomClasses = this.dateCustomClasses;
+        }
     };
     /**
      * Opens an element’s datepicker. This is considered a “manual” triggering of
@@ -5341,7 +5375,8 @@ var BsDaterangepickerDirective = (function () {
             value: this._bsValue,
             isDisabled: this.isDisabled,
             minDate: this.minDate || this.bsConfig && this.bsConfig.minDate,
-            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate
+            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate,
+            dateCustomClasses: this.dateCustomClasses || this.bsConfig && this.bsConfig.dateCustomClasses
         });
     };
     /**
@@ -5420,6 +5455,10 @@ var BsDaterangepickerDirective = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
         __metadata("design:type", Object)
     ], BsDaterangepickerDirective.prototype, "maxDate", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+        __metadata("design:type", Array)
+    ], BsDaterangepickerDirective.prototype, "dateCustomClasses", void 0);
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Output"])(),
         __metadata("design:type", typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"]) === "function" && _c || Object)
@@ -9687,6 +9726,13 @@ var BsDatepickerAbstractComponent = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(BsDatepickerAbstractComponent.prototype, "dateCustomClasses", {
+        set: function (value) {
+            this._effects.setDateCustomClasses(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
     BsDatepickerAbstractComponent.prototype.setViewMode = function (event) { };
     BsDatepickerAbstractComponent.prototype.navigateTo = function (event) { };
     BsDatepickerAbstractComponent.prototype.dayHoverHandler = function (event) { };
@@ -10094,6 +10140,9 @@ var BsDatepickerInlineDirective = (function () {
         if (changes.isDisabled) {
             this._datepickerRef.instance.isDisabled = this.isDisabled;
         }
+        if (changes.dateCustomClasses) {
+            this._datepickerRef.instance.dateCustomClasses = this.dateCustomClasses;
+        }
     };
     /**
      * Set config for datepicker
@@ -10103,7 +10152,8 @@ var BsDatepickerInlineDirective = (function () {
             value: this._bsValue,
             isDisabled: this.isDisabled,
             minDate: this.minDate || this.bsConfig && this.bsConfig.minDate,
-            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate
+            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate,
+            dateCustomClasses: this.dateCustomClasses || this.bsConfig && this.bsConfig.dateCustomClasses
         });
     };
     BsDatepickerInlineDirective.prototype.ngOnDestroy = function () {
@@ -10130,6 +10180,10 @@ var BsDatepickerInlineDirective = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
         __metadata("design:type", Object)
     ], BsDatepickerInlineDirective.prototype, "maxDate", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+        __metadata("design:type", Array)
+    ], BsDatepickerInlineDirective.prototype, "dateCustomClasses", void 0);
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Output"])(),
         __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"]) === "function" && _a || Object)
@@ -14892,20 +14946,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "CollapseDirective", function() { return __WEBPACK_IMPORTED_MODULE_6__collapse_index__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "CollapseModule", function() { return __WEBPACK_IMPORTED_MODULE_6__collapse_index__["b"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__datepicker_index__ = __webpack_require__(174);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DateFormatter", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["h"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DatePickerComponent", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["i"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DatepickerConfig", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["j"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DatepickerModule", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["k"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DayPickerComponent", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["l"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "MonthPickerComponent", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["m"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "YearPickerComponent", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["n"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDatepickerModule", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["d"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DateFormatter", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["i"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DatePickerComponent", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["j"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DatepickerConfig", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["k"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DatepickerModule", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["l"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DayPickerComponent", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["m"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "MonthPickerComponent", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["n"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "YearPickerComponent", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["o"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDatepickerModule", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["e"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDatepickerDateCustomClasses", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["b"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDatepickerConfig", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDaterangepickerConfig", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["e"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDatepickerInlineConfig", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["c"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsLocaleService", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["g"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDaterangepickerDirective", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["f"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDatepickerDirective", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["b"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDaterangepickerConfig", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["f"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDatepickerInlineConfig", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["d"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsLocaleService", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["h"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDaterangepickerDirective", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["g"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "BsDatepickerDirective", function() { return __WEBPACK_IMPORTED_MODULE_7__datepicker_index__["c"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__modal_index__ = __webpack_require__(202);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "ModalDirective", function() { return __WEBPACK_IMPORTED_MODULE_8__modal_index__["e"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "ModalOptions", function() { return __WEBPACK_IMPORTED_MODULE_8__modal_index__["g"]; });
@@ -16766,35 +16821,36 @@ var CarouselModule = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__datepicker_component__ = __webpack_require__(102);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return __WEBPACK_IMPORTED_MODULE_0__datepicker_component__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return __WEBPACK_IMPORTED_MODULE_0__datepicker_component__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__datepicker_module__ = __webpack_require__(175);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_1__datepicker_module__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return __WEBPACK_IMPORTED_MODULE_1__datepicker_module__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__daypicker_component__ = __webpack_require__(104);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return __WEBPACK_IMPORTED_MODULE_2__daypicker_component__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return __WEBPACK_IMPORTED_MODULE_2__daypicker_component__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__monthpicker_component__ = __webpack_require__(105);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return __WEBPACK_IMPORTED_MODULE_3__monthpicker_component__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return __WEBPACK_IMPORTED_MODULE_3__monthpicker_component__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__yearpicker_component__ = __webpack_require__(106);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return __WEBPACK_IMPORTED_MODULE_4__yearpicker_component__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return __WEBPACK_IMPORTED_MODULE_4__yearpicker_component__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__date_formatter__ = __webpack_require__(103);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return __WEBPACK_IMPORTED_MODULE_5__date_formatter__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return __WEBPACK_IMPORTED_MODULE_5__date_formatter__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__datepicker_config__ = __webpack_require__(64);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return __WEBPACK_IMPORTED_MODULE_6__datepicker_config__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_6__datepicker_config__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__bs_datepicker_module__ = __webpack_require__(176);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_7__bs_datepicker_module__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_7__bs_datepicker_module__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__bs_datepicker_component__ = __webpack_require__(65);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_8__bs_datepicker_component__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_8__bs_datepicker_component__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__bs_daterangepicker_component__ = __webpack_require__(69);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_9__bs_daterangepicker_component__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return __WEBPACK_IMPORTED_MODULE_9__bs_daterangepicker_component__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__bs_datepicker_inline_component__ = __webpack_require__(120);
 /* unused harmony reexport BsDatepickerInlineDirective */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__bs_datepicker_config__ = __webpack_require__(14);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_11__bs_datepicker_config__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_11__bs_datepicker_config__["b"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__bs_daterangepicker_config__ = __webpack_require__(70);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_12__bs_daterangepicker_config__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_12__bs_daterangepicker_config__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__bs_datepicker_inline_config__ = __webpack_require__(71);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_13__bs_datepicker_inline_config__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_13__bs_datepicker_inline_config__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__bs_locale_service__ = __webpack_require__(32);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return __WEBPACK_IMPORTED_MODULE_14__bs_locale_service__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return __WEBPACK_IMPORTED_MODULE_14__bs_locale_service__["a"]; });
 
 
 
@@ -17354,6 +17410,11 @@ function bsDatepickerReducer(state, action) {
                 isDisabled: action.payload
             });
         }
+        case __WEBPACK_IMPORTED_MODULE_1__bs_datepicker_actions__["a" /* BsDatepickerActions */].SET_DATE_CUSTOM_CLASSES: {
+            return Object.assign({}, state, {
+                dateCustomClasses: action.payload
+            });
+        }
         default:
             return state;
     }
@@ -17436,6 +17497,7 @@ function flagReducer(state, action) {
                 selectedDate: state.selectedDate,
                 selectedRange: state.selectedRange,
                 displayMonths: state.displayMonths,
+                dateCustomClasses: state.dateCustomClasses,
                 monthIndex: monthIndex
             });
         });
@@ -17604,6 +17666,11 @@ function flagDaysCalendar(formattedMonth, options) {
             var isDisabled = options.isDisabled ||
                 Object(__WEBPACK_IMPORTED_MODULE_1__chronos_utils_date_compare__["b" /* isBefore */])(day.date, options.minDate, 'day') ||
                 Object(__WEBPACK_IMPORTED_MODULE_1__chronos_utils_date_compare__["a" /* isAfter */])(day.date, options.maxDate, 'day');
+            var customClasses = options.dateCustomClasses && options.dateCustomClasses
+                .map(function (dcc) { return Object(__WEBPACK_IMPORTED_MODULE_0__chronos_utils_date_getters__["l" /* isSameDay */])(day.date, dcc.date) ? dcc.classes : []; })
+                .reduce(function (previousValue, currentValue) { return previousValue.concat(currentValue); }, [])
+                .join(' ')
+                || "";
             // decide update or not
             var newDay = Object.assign({}, day, {
                 isOtherMonth: isOtherMonth,
@@ -17612,15 +17679,17 @@ function flagDaysCalendar(formattedMonth, options) {
                 isSelectionStart: isSelectionStart,
                 isSelectionEnd: isSelectionEnd,
                 isInRange: isInRange,
-                isDisabled: isDisabled
+                isDisabled: isDisabled,
+                customClasses: customClasses
             });
             if (day.isOtherMonth !== newDay.isOtherMonth ||
                 day.isHovered !== newDay.isHovered ||
                 day.isSelected !== newDay.isSelected ||
                 day.isSelectionStart !== newDay.isSelectionStart ||
                 day.isSelectionEnd !== newDay.isSelectionEnd ||
+                day.isInRange !== newDay.isInRange ||
                 day.isDisabled !== newDay.isDisabled ||
-                day.isInRange !== newDay.isInRange) {
+                day.customClasses !== newDay.customClasses) {
                 week.days[dayIndex] = newDay;
             }
         });
@@ -18084,6 +18153,7 @@ var BsDatepickerDayDecoratorComponent = (function () {
             selector: '[bsDatepickerDayDecorator]',
             changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ChangeDetectionStrategy"].OnPush,
             host: {
+                '[class]': 'day.customClasses',
                 '[class.disabled]': 'day.isDisabled',
                 '[class.is-highlighted]': 'day.isHovered',
                 '[class.is-other-month]': 'day.isOtherMonth',

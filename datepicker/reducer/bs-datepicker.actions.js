@@ -72,6 +72,12 @@ var BsDatepickerActions = (function () {
             payload: value
         };
     };
+    BsDatepickerActions.prototype.setDateCustomClasses = function (value) {
+        return {
+            type: BsDatepickerActions.SET_DATE_CUSTOM_CLASSES,
+            payload: value
+        };
+    };
     BsDatepickerActions.prototype.setLocale = function (locale) {
         return {
             type: BsDatepickerActions.SET_LOCALE,
@@ -90,6 +96,7 @@ var BsDatepickerActions = (function () {
     BsDatepickerActions.SET_MIN_DATE = '[datepicker] set min date';
     BsDatepickerActions.SET_MAX_DATE = '[datepicker] set max date';
     BsDatepickerActions.SET_IS_DISABLED = '[datepicker] set is disabled';
+    BsDatepickerActions.SET_DATE_CUSTOM_CLASSES = '[datepicker] set date custom classes';
     BsDatepickerActions.SET_LOCALE = '[datepicker] set datepicker locale';
     BsDatepickerActions.SELECT_RANGE = '[daterangepicker] select dates range';
     BsDatepickerActions.decorators = [

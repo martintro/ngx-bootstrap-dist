@@ -1,7 +1,7 @@
 import { BsCustomDates } from '../themes/bs/bs-custom-dates-view.component';
 import { BsDatepickerEffects } from '../reducer/bs-datepicker.effects';
 import { Observable } from 'rxjs/Observable';
-import { BsDatepickerViewMode, BsNavigationEvent, CalendarCellViewModel, CellHoverEvent, DatepickerRenderOptions, DaysCalendarViewModel, DayViewModel, MonthsCalendarViewModel, YearsCalendarViewModel } from '../models/index';
+import { BsDatepickerViewMode, BsNavigationEvent, CalendarCellViewModel, CellHoverEvent, DatepickerRenderOptions, DatepickerDateCustomClasses, DaysCalendarViewModel, DayViewModel, MonthsCalendarViewModel, YearsCalendarViewModel } from '../models/index';
 export declare abstract class BsDatepickerAbstractComponent {
     containerClass: string;
     _effects: BsDatepickerEffects;
@@ -9,6 +9,7 @@ export declare abstract class BsDatepickerAbstractComponent {
     minDate: Date;
     maxDate: Date;
     isDisabled: boolean;
+    dateCustomClasses: DatepickerDateCustomClasses[];
     viewMode: Observable<BsDatepickerViewMode>;
     daysCalendar: Observable<DaysCalendarViewModel[]>;
     monthsCalendar: Observable<MonthsCalendarViewModel[]>;

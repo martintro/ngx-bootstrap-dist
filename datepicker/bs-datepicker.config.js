@@ -1,4 +1,10 @@
 import { Injectable } from '@angular/core';
+var BsDatepickerDateCustomClasses = (function () {
+    function BsDatepickerDateCustomClasses() {
+    }
+    return BsDatepickerDateCustomClasses;
+}());
+export { BsDatepickerDateCustomClasses };
 /**
  * For date range picker there are `BsDaterangepickerConfig` which inherits all properties,
  * except `displayMonths`, for range picker it default to `2`

@@ -2,6 +2,7 @@ import { ElementRef, EventEmitter, OnChanges, OnDestroy, OnInit, Renderer2, Simp
 import { BsDaterangepickerConfig } from './bs-daterangepicker.config';
 import { Subscription } from 'rxjs/Subscription';
 import { ComponentLoaderFactory } from '../component-loader/component-loader.factory';
+import { BsDatepickerDateCustomClasses } from './bs-datepicker.config';
 export declare class BsDaterangepickerDirective implements OnInit, OnDestroy, OnChanges {
     _config: BsDaterangepickerConfig;
     /**
@@ -55,6 +56,10 @@ export declare class BsDaterangepickerDirective implements OnInit, OnDestroy, On
      * Maximum date which is available for selection
      */
     maxDate: Date;
+    /**
+     * Date custom classes
+     */
+    dateCustomClasses: BsDatepickerDateCustomClasses[];
     /**
      * Emits when daterangepicker value has been changed
      */

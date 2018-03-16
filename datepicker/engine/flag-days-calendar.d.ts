@@ -1,4 +1,4 @@
-import { DaysCalendarViewModel } from '../models/index';
+import { DaysCalendarViewModel, DatepickerDateCustomClasses } from '../models/index';
 export interface FlagDaysCalendarOptions {
     isDisabled: boolean;
     minDate: Date;
@@ -8,5 +8,6 @@ export interface FlagDaysCalendarOptions {
     selectedRange: Date[];
     displayMonths: number;
     monthIndex: number;
+    dateCustomClasses: DatepickerDateCustomClasses[];
 }
 export declare function flagDaysCalendar(formattedMonth: DaysCalendarViewModel, options: FlagDaysCalendarOptions): DaysCalendarViewModel;

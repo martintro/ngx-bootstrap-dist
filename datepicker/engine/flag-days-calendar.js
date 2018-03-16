@@ -24,6 +24,11 @@ export function flagDaysCalendar(formattedMonth, options) {
             var isDisabled = options.isDisabled ||
                 isBefore(day.date, options.minDate, 'day') ||
                 isAfter(day.date, options.maxDate, 'day');
+            var customClasses = options.dateCustomClasses && options.dateCustomClasses
+                .map(function (dcc) { return isSameDay(day.date, dcc.date) ? dcc.classes : []; })
+                .reduce(function (previousValue, currentValue) { return previousValue.concat(currentValue); }, [])
+                .join(' ')
+                || "";
             // decide update or not
             var newDay = Object.assign({}, day, {
                 isOtherMonth: isOtherMonth,
@@ -32,15 +37,17 @@ export function flagDaysCalendar(formattedMonth, options) {
                 isSelectionStart: isSelectionStart,
                 isSelectionEnd: isSelectionEnd,
                 isInRange: isInRange,
-                isDisabled: isDisabled
+                isDisabled: isDisabled,
+                customClasses: customClasses
             });
             if (day.isOtherMonth !== newDay.isOtherMonth ||
                 day.isHovered !== newDay.isHovered ||
                 day.isSelected !== newDay.isSelected ||
                 day.isSelectionStart !== newDay.isSelectionStart ||
                 day.isSelectionEnd !== newDay.isSelectionEnd ||
+                day.isInRange !== newDay.isInRange ||
                 day.isDisabled !== newDay.isDisabled ||
-                day.isInRange !== newDay.isInRange) {
+                day.customClasses !== newDay.customClasses) {
                 week.days[dayIndex] = newDay;
             }
         });

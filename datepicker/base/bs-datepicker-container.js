@@ -23,6 +23,13 @@ var BsDatepickerAbstractComponent = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(BsDatepickerAbstractComponent.prototype, "dateCustomClasses", {
+        set: function (value) {
+            this._effects.setDateCustomClasses(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
     BsDatepickerAbstractComponent.prototype.setViewMode = function (event) { };
     BsDatepickerAbstractComponent.prototype.navigateTo = function (event) { };
     BsDatepickerAbstractComponent.prototype.dayHoverHandler = function (event) { };

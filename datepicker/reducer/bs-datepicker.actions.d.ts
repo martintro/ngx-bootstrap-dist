@@ -1,6 +1,6 @@
 import { TimeUnit } from '../../chronos/types';
 import { Action } from '../../mini-ngrx/index';
-import { BsDatepickerViewMode, BsViewNavigationEvent, CellHoverEvent, DatepickerRenderOptions } from '../models/index';
+import { BsDatepickerViewMode, BsViewNavigationEvent, CellHoverEvent, DatepickerRenderOptions, DatepickerDateCustomClasses } from '../models/index';
 export declare class BsDatepickerActions {
     static readonly CALCULATE: string;
     static readonly FORMAT: string;
@@ -14,6 +14,7 @@ export declare class BsDatepickerActions {
     static readonly SET_MIN_DATE: string;
     static readonly SET_MAX_DATE: string;
     static readonly SET_IS_DISABLED: string;
+    static readonly SET_DATE_CUSTOM_CLASSES: string;
     static readonly SET_LOCALE: string;
     static readonly SELECT_RANGE: string;
     calculate(): Action;
@@ -29,5 +30,6 @@ export declare class BsDatepickerActions {
     minDate(date: Date): Action;
     maxDate(date: Date): Action;
     isDisabled(value: boolean): Action;
+    setDateCustomClasses(value: DatepickerDateCustomClasses[]): Action;
     setLocale(locale: string): Action;
 }

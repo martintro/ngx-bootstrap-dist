@@ -1,4 +1,4 @@
-import { BsDatepickerViewMode, DatepickerFormatOptions, DatepickerRenderOptions, DaysCalendarModel, DaysCalendarViewModel, MonthsCalendarViewModel, MonthViewOptions, YearsCalendarViewModel } from '../models/index';
+import { BsDatepickerViewMode, DatepickerFormatOptions, DatepickerRenderOptions, DatepickerDateCustomClasses, DaysCalendarModel, DaysCalendarViewModel, MonthsCalendarViewModel, MonthViewOptions, YearsCalendarViewModel } from '../models/index';
 export interface BsDatepickerViewState {
     date: Date;
     mode: BsDatepickerViewMode;
@@ -10,6 +10,7 @@ export declare class BsDatepickerState implements DatepickerRenderOptions, Datep
     isDisabled?: boolean;
     minDate?: Date;
     maxDate?: Date;
+    dateCustomClasses?: DatepickerDateCustomClasses[];
     hoveredDate?: Date;
     hoveredMonth?: Date;
     hoveredYear?: Date;

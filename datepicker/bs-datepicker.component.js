@@ -89,6 +89,9 @@ var BsDatepickerDirective = (function () {
         if (changes.isDisabled) {
             this._datepickerRef.instance.isDisabled = this.isDisabled;
         }
+        if (changes.dateCustomClasses) {
+            this._datepickerRef.instance.dateCustomClasses = this.dateCustomClasses;
+        }
     };
     /**
      * Opens an element’s datepicker. This is considered a “manual” triggering of
@@ -147,7 +150,8 @@ var BsDatepickerDirective = (function () {
             value: this._bsValue,
             isDisabled: this.isDisabled,
             minDate: this.minDate || this.bsConfig && this.bsConfig.minDate,
-            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate
+            maxDate: this.maxDate || this.bsConfig && this.bsConfig.maxDate,
+            dateCustomClasses: this.dateCustomClasses || this.bsConfig && this.bsConfig.dateCustomClasses
         });
     };
     BsDatepickerDirective.prototype.ngOnDestroy = function () {
@@ -180,6 +184,7 @@ var BsDatepickerDirective = (function () {
         'isDisabled': [{ type: Input },],
         'minDate': [{ type: Input },],
         'maxDate': [{ type: Input },],
+        'dateCustomClasses': [{ type: Input },],
         'bsValueChange': [{ type: Output },],
     };
     return BsDatepickerDirective;

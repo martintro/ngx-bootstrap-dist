@@ -3,7 +3,7 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { BsDatepickerAbstractComponent } from '../base/bs-datepicker-container';
 import { BsDatepickerConfig } from '../bs-datepicker.config';
-import { BsDatepickerViewMode, DatepickerRenderOptions, DaysCalendarViewModel, MonthsCalendarViewModel, YearsCalendarViewModel } from '../models/index';
+import { BsDatepickerViewMode, DatepickerRenderOptions, DatepickerDateCustomClasses, DaysCalendarViewModel, MonthsCalendarViewModel, YearsCalendarViewModel } from '../models/index';
 import { BsDatepickerActions } from './bs-datepicker.actions';
 import { BsDatepickerStore } from './bs-datepicker.store';
 import { BsLocaleService } from '../bs-locale.service';
@@ -25,6 +25,7 @@ export declare class BsDatepickerEffects {
     setMinDate(value: Date): BsDatepickerEffects;
     setMaxDate(value: Date): BsDatepickerEffects;
     setDisabled(value: boolean): BsDatepickerEffects;
+    setDateCustomClasses(value: DatepickerDateCustomClasses[]): BsDatepickerEffects;
     setOptions(_config: BsDatepickerConfig): BsDatepickerEffects;
     /** view to mode bindings */
     setBindings(container: BsDatepickerAbstractComponent): BsDatepickerEffects;
